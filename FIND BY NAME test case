@@ -1,0 +1,17 @@
+from django.test import TestCase
+
+from ..models import Product
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create 10 fake products with different names
+        for i in range(10):
+            ProductFactory(name=f'Product {i}')
+
+    def test_can_find_product_by_name(self):
+        """Test that we can find a product by name in the database."""
+
+        product = Product.objects.get(name='Product 5')
+
+        self.assertEqual(product.name, 'Product 5')
