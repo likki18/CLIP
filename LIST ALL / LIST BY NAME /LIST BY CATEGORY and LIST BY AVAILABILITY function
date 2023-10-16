@@ -1,0 +1,125 @@
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+
+from ..models import Product
+
+def list_products(request):
+    """
+    List all products in the database.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response with all product data.
+    """
+
+    products = Product.objects.all()
+
+    products_data = []
+    for product in products:
+        products_data.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image': product.image,
+            'created_at': product.created_at,
+        })
+
+    return JsonResponse(products_data)
+
+def list_products_by_name(request):
+    """
+    List all products with the given name in the database.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response with all product data with the given name.
+    """
+
+    name = request.GET.get('name')
+
+    if not name:
+        return JsonResponse([], status=400)
+
+    products = Product.objects.filter(name__icontains=name)
+
+    products_data = []
+    for product in products:
+        products_data.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image': product.image,
+            'created_at': product.created_at,
+        })
+
+    return JsonResponse(products_data)
+
+def list_products_by_category(request):
+    """
+    List all products with the given category in the database.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response with all product data with the given category.
+    """
+
+    category_id = request.GET.get('category')
+
+    if not category_id:
+        return JsonResponse([], status=400)
+
+    category = get_object_or_404(Category, id=category_id)
+
+    products = Product.objects.filter(category=category)
+
+    products_data = []
+    for product in products:
+        products_data.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image': product.image,
+            'created_at': product.created_at,
+        })
+
+    return JsonResponse(products_data)
+
+def list_products_by_availability(request):
+    """
+    List all products with the given availability in the database.
+
+    Args:
+        request: The HTTP request.
+
+    Returns:
+        A JSON response with all product data with the given availability.
+    """
+
+    availability = request.GET.get('availability')
+
+    if not availability:
+        return JsonResponse([], status=400)
+
+    products = Product.objects.filter(availability=availability)
+
+    products_data = []
+    for product in products:
+        products_data.append({
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': product.price,
+            'image': product.image,
+            'created_at': product.created_at,
+        })
+
+    return JsonResponse(products_data)
