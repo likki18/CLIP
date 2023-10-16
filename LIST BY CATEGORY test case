@@ -1,0 +1,29 @@
+import json
+from unittest import TestCase
+
+from django.urls import reverse
+
+from ..models import Product, Category
+
+class ProductRoutesTest(TestCase):
+
+    def setUp(self):
+        # Create 10 fake products with different categories
+        for i in range(10):
+            category = CategoryFactory()
+            ProductFactory(category=category)
+
+    def test_can_list_products_by_category(self):
+        """Test that we can list products by category through the API."""
+
+        category = Category.objects.get(name='Electronics')
+        response = self.client.get(reverse('product-list'), {'category': category.id})
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content_type, 'application/json')
+
+        products_data = json.loads(response.content)
+
+        self.assertEqual(len(products_data), 10)
+        for product_data in products_data:
+            self.assertEqual(product_data['category']['id'], category.id)
