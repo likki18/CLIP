@@ -1,0 +1,16 @@
+from django.test import TestCase
+
+from ..models import Product
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create 10 fake products
+        create_fake_products(10)
+
+    def test_can_list_all_products(self):
+        """Test that we can list all products in the database."""
+
+        products = Product.objects.all()
+
+        self.assertEqual(len(products), 10)
