@@ -1,0 +1,19 @@
+from django.test import TestCase
+
+from ..models import Product
+
+class ProductModelTest(TestCase):
+
+    def setUp(self):
+        # Create 10 fake products with different availability
+        for i in range(10):
+            ProductFactory(availability=bool(i % 2))
+
+    def test_can_find_product_by_availability(self):
+        """Test that we can find a product by availability in the database."""
+
+        available_products = Product.objects.filter(availability=True)
+        unavailable_products = Product.objects.filter(availability=False)
+
+        self.assertEqual(len(available_products), 5)
+        self.assertEqual(len(unavailable_products), 5)
